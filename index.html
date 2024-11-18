@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>נגן מדיה משופר</title>
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .video-js {
+            width: 800px;
+            max-width: 100%;
+            margin: 0 auto 10px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>נגן מדיה משופר עם אפשרות שיתוף</h1>
+    <video
+        id="videoPlayer"
+        class="video-js vjs-default-skin"
+        controls
+        preload="auto"
+        data-setup='{}'>
+        <source src="https://vod.wgnmedia.com/VOD/LIB.MP4/v66540.mp4" type="video/mp4">
+        הדפדפן שלך לא תומך בניגון וידאו.
+    </video>
+    <br>
+    <button onclick="getShareLink()">שתף מהרגע הזה</button>
+    <br>
+    <input id="shareLink" type="text" placeholder="כאן יופיע הקישור לשיתוף" readonly style="width: 80%;">
+
+    <!-- Video.js JS -->
+    <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+    <script>
+        function getShareLink() {
+            const player = videojs('videoPlayer'); // קבלת האובייקט של הנגן
+            const currentTime = Math.floor(player.currentTime()); // זמן נוכחי בשניות
+            const baseUrl = window.location.href.split('?')[0]; // כתובת בסיסית ללא פרמטרים
+            const shareLink = `${baseUrl}?t=${currentTime}`; // הוספת פרמטר זמן
+            document.getElementById("shareLink").value = shareLink; // הצגת הקישור
+        }
+
+        // אם יש פרמטר זמן בכתובת, הפעל מהזמן הנכון
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const startTime = urlParams.get("t");
+            if (startTime) {
+                const player = videojs('videoPlayer');
+                player.ready(function() {
+                    player.currentTime(parseInt(startTime));
+                });
+            }
+        };
+    </script>
+</body>
+</html>
